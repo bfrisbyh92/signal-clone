@@ -25,8 +25,9 @@ const RegisterScreen = ({ navigation }) => {
    // Register is the name of the onPress function, async because creating a user involves promises that can fail
     createUserWithEmailAndPassword(auth, email, password)
       .then(({ user }) => {
-        console.log(user) 
+        
         // Note to Self: Come back here and get displayName, photoURL/imageUrl and properties in firebase to match our signed in user
+        console.log(user)
         navigation.navigate('Login')
       })
       .catch(error =>
