@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
       width: 200,
       marginTop: 10,
     },
-})
+});
