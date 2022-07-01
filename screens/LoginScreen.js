@@ -1,15 +1,35 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { Button,  Input, Image } from 'react-native-elements'
+import { auth } from '../firebase'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const signIn = () => {
+  useEffect(() => {
+   const unsubscribe = auth.onAuthStateChanged((user) => {
+      if(user){
+        navigation.replace("Home")
+      }
+    })
+    return unsubscribe;
+  }, [])
 
-  }
+  const signIn = async() => {
+      // const auth = getAuth();
+      signInWithEmailAndPassword(auth, email, password)
+      .then(({ user }) => {
+        console.log(user) 
+        // Note to Self: Come back here and get displayName, photoURL/imageUrl and properties in firebase to match our signed in user
+        navigation.navigate('Home')
+      })
+      .catch(error =>
+        alert(error.message)
+    );
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding' enabled={true} >
@@ -29,6 +49,7 @@ const LoginScreen = ({ navigation }) => {
           value={password}
           onChangeText={text => setPassword(text)}
           type="password"
+          onSubmitEditing={ signIn }
          />
       </View>
         <Button title="Login"

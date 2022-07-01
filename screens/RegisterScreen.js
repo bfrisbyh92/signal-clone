@@ -2,8 +2,9 @@ import { StyleSheet, View, KeyboardAvoidingView } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { StatusBar} from 'expo-status-bar'
 import { Button, Input, Text } from 'react-native-elements'
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import {signInWithPhoneNumber, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth  } from '../firebase'
+import { defaultImage } from '../assets/defaultImage.png'
 
 const RegisterScreen = ({ navigation }) => {
 
@@ -11,7 +12,8 @@ const RegisterScreen = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [imageUrl, setImageUrl] = useState('')
-
+    
+    
     useLayoutEffect(() => {
       navigation.setOptions({
         headerBackTitle: 'Back to Login'
@@ -22,12 +24,13 @@ const RegisterScreen = ({ navigation }) => {
    // I'm importing the needed function from firebase to createUser with the email and password
    // Register is the name of the onPress function, async because creating a user involves promises that can fail
     createUserWithEmailAndPassword(auth, email, password)
-      .then((user) => {
-        console.log(user)
+      .then(({ user }) => {
+        console.log(user) 
+        // Note to Self: Come back here and get displayName, photoURL/imageUrl and properties in firebase to match our signed in user
         navigation.navigate('Login')
       })
       .catch(error =>
-        console.log(error.message)
+        alert(error.message)
     );
   };
 

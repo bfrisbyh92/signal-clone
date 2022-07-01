@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeAuth, updateProfile } from 'firebase/auth';
 import Constants from 'expo-constants';
 
 const firebaseConfig = {
@@ -28,4 +28,4 @@ const app = initializeApp(firebaseConfig);
 // initialize auth
 const auth = initializeAuth(app);
 
-export { auth };
+export { auth, updateProfile };
