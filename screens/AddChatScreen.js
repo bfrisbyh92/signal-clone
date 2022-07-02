@@ -32,7 +32,7 @@ useLayoutEffect(() => {
   return (
     <View style={ styles.container }>
       <Input
-        placeholder='Enter a Username'
+        placeholder='Enter a chat name'
         value={ input }
         onChangeText={(text) => setInput(text) }
         onSubmitEditing={ createChat }

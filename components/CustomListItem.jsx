@@ -4,7 +4,7 @@ import { ListItem, Avatar } from 'react-native-elements'
 
 const CustomListItem = ({ id, chatName, enterChat }) => {
   return (
-    <ListItem>
+    <ListItem key={ id } bottomDivider>
         <Avatar
             rounded
             source={{
@@ -14,14 +14,14 @@ const CustomListItem = ({ id, chatName, enterChat }) => {
         />
         <ListItem.Content>
             <ListItem.Title style={{ fontWeight: '800'}}>
-            Signal-Clone
+              { chatName }
             </ListItem.Title>
 
           <ListItem.Subtitle 
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            This is a test subtitle  that will eventually run off the screen
+            This is a test subtitle that will eventually run off the screen and create trailing dots but it's just for testing
           </ListItem.Subtitle>
 
         </ListItem.Content>
