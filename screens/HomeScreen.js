@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native'
-import React,{ useLayoutEffect } from 'react'
+import React,{ useLayoutEffect, useState, useEffect } from 'react'
 import { Avatar } from 'react-native-elements'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {auth, db} from '../firebase'
+import { collection, getDocs, doc, query } from "firebase/firestore";
 import CustomListItem from '../components/CustomListItem'
 const tempPhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR3na8Ecqhy6F_OoizJeN3AvDhXsq5D7WkVQ&usqp=CAU"
 const logoutIcon = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY02laUiGBxHnxuzLQT_3upSoj07Zu_HEv-w&usqp=CAU"
@@ -11,12 +12,29 @@ import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 
 
 const HomeScreen = ({ navigation }) => {
+    const [chats, setChats] = useState([])
 
   const signOutUser = () => {
     auth.signOut().then(() => {
       navigation.replace("Login")
     })
   }
+
+  //  useEffect(() => {
+  //    async function fetchChats() {
+  //      const querySnapshot = await getDocs(collection(db, "chats"));
+  //      setChats(querySnapshot.map(doc => ({
+  //        id: doc.id,
+  //        data: doc.data(),
+  //      })))
+  //      console.log(doc.id, " => ", doc.data());
+  //  }
+    
+  //   console.log(chats)
+  //       return fetchChats;
+  //   // return querySnapshot;
+  // },[])
+  // ^^^ This useEffect is not working. This is my stopping point for right now
 
 useLayoutEffect(() => {
   navigation.setOptions({
