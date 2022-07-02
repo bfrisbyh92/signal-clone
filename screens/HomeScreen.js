@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native'
 import React,{ useLayoutEffect, useState, useEffect } from 'react'
 import { Avatar } from 'react-native-elements'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import {auth, db} from '../firebase'
 import { collection, getDocs, doc, query } from "firebase/firestore";
@@ -20,20 +20,19 @@ const HomeScreen = ({ navigation }) => {
     })
   }
 
-  //  useEffect(() => {
-  //    async function fetchChats() {
-  //      const querySnapshot = await getDocs(collection(db, "chats"));
-  //      setChats(querySnapshot.map(doc => ({
-  //        id: doc.id,
-  //        data: doc.data(),
-  //      })))
-  //      console.log(doc.id, " => ", doc.data());
-  //  }
-    
-  //   console.log(chats)
-  //       return fetchChats;
-  //   // return querySnapshot;
-  // },[])
+ // Get Chats from firestore
+ const getChats = async(db) => {
+    const querySnapshot = await getDocs(collection(db, 'chats'))
+    setChats(querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      data: doc.data(),
+    })))
+ }
+
+     useEffect(() => {
+        getChats(db)
+        console.log(chats)
+      },[]);
   // ^^^ This useEffect is not working. This is my stopping point for right now
 
 useLayoutEffect(() => {
@@ -88,8 +87,12 @@ useLayoutEffect(() => {
 
   return (
     <SafeAreaView>
-      <ScrollView>
-        <CustomListItem />
+      <ScrollView style={ styles.container }>
+        {chats.map(({ id, data: { chatName } }) => (
+          <CustomListItem
+            key={ id } id={ id } chatName={ chatName }
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   )
@@ -97,4 +100,8 @@ useLayoutEffect(() => {
 
 export default HomeScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+  }
+})
