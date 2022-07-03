@@ -1,104 +1,99 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native'
-import React,{ useLayoutEffect, useState, useEffect } from 'react'
+import { StatusBar } from 'expo-status-bar'
+import { SimpleLineIcons } from '@expo/vector-icons'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Avatar } from 'react-native-elements'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-
-import {auth, db} from '../firebase'
-import { collection, getDocs, doc, query } from "firebase/firestore";
 import CustomListItem from '../components/CustomListItem'
-const tempPhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR3na8Ecqhy6F_OoizJeN3AvDhXsq5D7WkVQ&usqp=CAU"
-const logoutIcon = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY02laUiGBxHnxuzLQT_3upSoj07Zu_HEv-w&usqp=CAU"
-import { AntDesign, SimpleLineIcons } from '@expo/vector-icons'
 
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native'
+
+import {
+  auth,
+  db,
+  signOut,
+  collection,
+  onSnapshot,
+} from '../firebase'
 
 const HomeScreen = ({ navigation }) => {
-    const [chats, setChats] = useState([])
-
+  const [chats, setChats] = useState([])
+  
   const signOutUser = () => {
-    auth.signOut().then(() => {
-      navigation.replace("Login")
+    signOut(auth).then(() => navigation.replace('Login'))
+  }
+
+  useEffect(
+    () =>
+      onSnapshot(collection(db, 'chats'), (snapshot) => {
+        setChats(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+          console.log(chats)
+      }),
+    []
+  )
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Signal',
+      headerStyle: { backgroundColor: 'white' },
+      headerTitleStyle: { color: 'black' },
+      headerTintColor: 'black',
+      headerLeft: () => (
+        <View style={{ marginLeft: 20 }}>
+          <TouchableOpacity activeOpacity={0.5}>
+            <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerRight: () => (
+        <View
+          style={{
+            marginRight: 20,
+            width: 120,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            backgroundColor: 'white'
+          }}
+        >
+          <TouchableOpacity activeOpacity={0.5}>
+            <SimpleLineIcons name="camera" size={18} color="black" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate('AddChat')}
+          >
+            <SimpleLineIcons name="pencil" size={18} color="black" />
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={0.5} onPress={signOutUser}>
+            <SimpleLineIcons name="logout" size={18} color="black" />
+          </TouchableOpacity>
+        </View>
+      ),
+    })
+  }, [navigation])
+
+  const enterChat = (id, chatName) => {
+    navigation.navigate('Chat', {
+      id,
+      chatName,
     })
   }
 
- // Get Chats from firestore
- const getChats = async(db) => {
-    const querySnapshot = await getDocs(collection(db, 'chats'))
-    setChats(querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      data: doc.data(),
-    })))
- }
-
-     useEffect(() => {
-        getChats(db)
-        console.log(chats)
-      },[]);
-  // ^^^ This useEffect is not working. This is my stopping point for right now
-
-useLayoutEffect(() => {
-  navigation.setOptions({
-      title: 'Signal',
-      headerStyle: { backgroundColor: '#fff' },
-      headerTitleStyle: { color: "black" },
-      headerTintColor: "black",
-      headerLeft: () => <View style={{ marginLeft: 20}}>
-       <TouchableOpacity onPress={ signOutUser } activeOpacity={0.5}>
-        <Avatar
-          rounded
-          source={{ uri: tempPhotoUrl }}
-          // ^^^ Need to change to match firebase "photoURL". Need to change components/CustomListItem to also be correct for now I'm using this avatar image url
-         />
-         <Text>Sign Out</Text>
-         </TouchableOpacity>
-      </View>,
-        headerRight: () => (
-             <View style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: 80,
-                marginRight: 20,
-
-             }}>
-                <TouchableOpacity activeOpacity={0.5}>
-                  <AntDesign name='camerao' size={24} color="black" />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => navigation.navigate("AddChat")}
-                >
-                  <SimpleLineIcons name='pencil' size={24} color="black" />
-                </TouchableOpacity>
-             </View> 
-        )
-      // headerRight: () => <View style={{ marginLeft: 20}}>
-      //     <TouchableOpacity onPress={ signOutUser } activeOpacity={0.5}>
-      //   <Avatar
-      //     // rounded
-      //     source={{ uri: logoutIcon }}
-      //     // ^^^ Need to change to match firebase "photoURL". Need to change components/CustomListItem to also be correct for now I'm using this avatar image url
-      //    />
-      //    <Text>Logout</Text>
-      //    </TouchableOpacity>
-      //    </View>
-        // ^^^ Alternative Logout instead of Pencil && Camera icon on Home screens header ^^^
-  })
-}, [])
-
-const enterChat = ( id, chatName ) => {
-    navigation.navigate("Chat", {
-        id: id, 
-        chatName: chatName, 
-       })
-}
-
   return (
     <SafeAreaView>
-      <ScrollView style={ styles.container }>
-        {chats.map(({ id, data: { chatName } }) => (
+      <StatusBar style="light" />
+      <ScrollView style={styles.container}>
+        {chats.map(({ id, chatName }) => (
           <CustomListItem
             key={ id }
-             id={ id }
+            id={ id }
             chatName={ chatName }
             enterChat={ enterChat }
           />
@@ -113,5 +108,5 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-  }
+  },
 })
