@@ -2,17 +2,18 @@ import { StyleSheet, View, KeyboardAvoidingView } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { StatusBar} from 'expo-status-bar'
 import { Button, Input, Text } from 'react-native-elements'
-import {signInWithPhoneNumber, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth  } from '../firebase'
-import { defaultImage } from '../assets/defaultImage.png'
+
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from '../firebase'
 
 const RegisterScreen = ({ navigation }) => {
-
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [imageUrl, setImageUrl] = useState('')
-    
     
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -20,20 +21,23 @@ const RegisterScreen = ({ navigation }) => {
       })
     },[navigation])
 
-    const register = async() => {
-   // I'm importing the needed function from firebase to createUser with the email and password
-   // Register is the name of the onPress function, async because creating a user involves promises that can fail
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        
-        // Note to Self: Come back here and get displayName, photoURL/imageUrl and properties in firebase to match our signed in user
-        console.log(user)
-        navigation.navigate('Login')
-      })
-      .catch(error =>
-        alert(error.message)
-    );
-  };
+    const register = () => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((authUser) => {
+          const user = authUser.user
+          console.log( user )
+            updateProfile(user, {
+            displayName: name,
+            photoURL: imageUrl,
+          })
+            .then(() => console.log(` Profile updated successfully! 
+              Name/displayName => ${auth.currentUser.displayName}`,
+              `PhotoURL/imageUrl=> ${auth.currentUser.photoURL}`))
+
+            .catch((error) => console.log(error.message))
+          })
+            .catch((error) => alert(error.message))
+    }
 
   return (
     <KeyboardAvoidingView

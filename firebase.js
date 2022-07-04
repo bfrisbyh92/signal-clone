@@ -1,32 +1,55 @@
-import { initializeApp } from 'firebase/app';
-import { initializeAuth, updateProfile } from 'firebase/auth';
-import Constants from 'expo-constants';
-import {getFirestore, collection, updateDoc, getDocs } from 'firebase/firestore'
+import { initializeApp, getApps } from 'firebase/app'
+import { getStorage } from 'firebase/storage'
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  serverTimestamp,
+  query,
+  orderBy,
+} from 'firebase/firestore'
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from 'firebase/auth'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCz3x0EvaqA_ywSnIH23QFC6GPdpRuhess",
-  authDomain: "signal-6531d.firebaseapp.com",
-  projectId: "signal-6531d",
-  storageBucket: "signal-6531d.appspot.com",
-  messagingSenderId: "157384369305",
-  appId: "1:157384369305:web:f2b9fc727c1ac83be94408"
+  apiKey: "AIzaSyAHFen-w12C6LwbK7wiZXZY5-f86dNiO44",
+  authDomain: "signal3-45484.firebaseapp.com",
+  projectId: "signal3-45484",
+  storageBucket: "signal3-45484.appspot.com",
+  messagingSenderId: "782950195799",
+  appId: "1:782950195799:web:3da5209dd30154f632f912"
 };
 
-// // add firebase config
-// const firebaseConfig = {
-//   apiKey: Constants.manifest.extra.apiKey,
-//   authDomain: Constants.manifest.extra.authDomain,
-//   projectId: Constants.manifest.extra.projectId,
-//   storageBucket: Constants.manifest.extra.storageBucket,
-//   messagingSenderId: Constants.manifest.extra.messagingSenderId,
-//   appId: Constants.manifest.extra.appId,
-// };
-// ^^^ This is for later. Similiar to a dot env file in regular React? ^^^ Looked important enough to save
+if (!getApps().length) initializeApp(firebaseConfig)
+// ^^^ Only want to initialize app once, improve performance. ^^^
+const db = getFirestore()
+const auth = getAuth()
+const storage = getStorage()
 
-// initialize firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app)
-// initialize auth
-const auth = initializeAuth(app);
-
-export { auth, db, collection, updateDoc, getDocs };
+export {
+  storage,
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  signOut,
+  collection,
+  addDoc,
+  getFirestore,
+  onSnapshot,
+  serverTimestamp,
+  query,
+  orderBy,
+  db,
+  auth,
+}
