@@ -2,6 +2,7 @@ import { StyleSheet, View, KeyboardAvoidingView } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { StatusBar} from 'expo-status-bar'
 import { Button, Input, Text } from 'react-native-elements'
+
 import {
   auth,
   createUserWithEmailAndPassword,
@@ -9,9 +10,6 @@ import {
 } from '../firebase'
 
 const RegisterScreen = ({ navigation }) => {
-
-// if(auth.currentUser){console.log(auth.currentUser)}
-
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -27,7 +25,7 @@ const RegisterScreen = ({ navigation }) => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((authUser) => {
           const user = authUser.user
-          console.log(authUser, user )
+          console.log( user )
             updateProfile(user, {
             displayName: name,
             photoURL: imageUrl,

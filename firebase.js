@@ -1,6 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app'
 import { getStorage } from 'firebase/storage'
-// import { firebaseConfig } from './firebaseVariables'
 
 import {
   getFirestore,
@@ -11,7 +10,6 @@ import {
   query,
   orderBy,
 } from 'firebase/firestore'
-// import { getDoc } from 'firebase/firestore'
 
 import {
   getAuth,
@@ -22,23 +20,14 @@ import {
   signOut,
 } from 'firebase/auth'
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCz3x0EvaqA_ywSnIH23QFC6GPdpRuhess",
-//   authDomain: "signal-6531d.firebaseapp.com",
-//   projectId: "signal-6531d",
-//   storageBucket: "signal-6531d.appspot.com",
-//   messagingSenderId: "157384369305",
-//   appId: "1:157384369305:web:f2b9fc727c1ac83be94408"
-// };
-
 const firebaseConfig = {
-  apiKey: "AIzaSyDC5L1TiSG9gOWJGZk4Uahaubxu6KrJR9s",
-  authDomain: "signal-clone-e3d92.firebaseapp.com",
-  projectId: "signal-clone-e3d92",
-  storageBucket: "signal-clone-e3d92.appspot.com",
-  messagingSenderId: "771049167636",
-  appId: "1:771049167636:web:62427dcd6bde326201c001"
-}
+  apiKey: "AIzaSyAHFen-w12C6LwbK7wiZXZY5-f86dNiO44",
+  authDomain: "signal3-45484.firebaseapp.com",
+  projectId: "signal3-45484",
+  storageBucket: "signal3-45484.appspot.com",
+  messagingSenderId: "782950195799",
+  appId: "1:782950195799:web:3da5209dd30154f632f912"
+};
 
 if (!getApps().length) initializeApp(firebaseConfig)
 // ^^^ Only want to initialize app once, improve performance. ^^^

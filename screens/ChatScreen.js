@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Avatar } from 'react-native-elements'
-import { FontAwesome, Ionicons, AntDesign } from '@expo/vector-icons'
+import { Ionicons, AntDesign } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
 // import { AsyncStorage } from '@react-native-async-storage/async-storage';
 
@@ -32,7 +32,8 @@ const ChatScreen = ({ navigation, route }) => {
   const [msgInput, setMsgInput] = useState('')
   const [messages, setMessages] = useState([])
   
-
+const defaultPhoto = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1htAf5FskKszUw9WnNmoszxdQesLZ48gqsA&usqp=CAU"
+  
   const sendMsg = async () => {
     Keyboard.dismiss()
 
@@ -63,50 +64,41 @@ const ChatScreen = ({ navigation, route }) => {
     [route]
   )
 
-    useLayoutEffect(() => {
+  useLayoutEffect(() => {
       navigation.setOptions({
         title: 'Chat',
         headerBackTitleVisible: false,
         HeaderTitleAlign: 'left',
         headerTitle: () => (
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-            <Avatar rounded source={{uri: messages[0]?.photoURL }} />
-            <Text style={{ color: 'white', marginLeft: 10, fontWeight: "500" }}
-            >
-            { route.params.chatName }
-            </Text>
+          <View
+            style={{flexDirection: 'row', alignItems: 'center'}}
+          >
+              <Text>{route.params.chatName < 12 
+                ? `${route.params.chatName}` 
+                : `${route.params.chatName.substring(0, 12)}...`}
+              </Text>
+            <Avatar rounded source={{
+              uri: messages[0]?.photoURL
+            }}/>
+            {/* ^^^ Image of the last person to send a message in the chat ^^^ */}
+          </View>
+        ),
+        headerRight: () => (
+          <View>
+            <TouchableOpacity>
+              <Ionicons name="call-outline" size={24} color="black" />
+            </TouchableOpacity>
           </View>
         ),
         headerLeft: () => (
-          <TouchableOpacity
-            style={{ marginLeft: 10 }}
-            onPress={ navigation.goBack }
-          >
-            <AntDesign name="arrowleft" size={24} color="white" />
-          </TouchableOpacity>
-        ),
-        headerRight: () => (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: '80%',
-              marginRight: 20,
-            }}
-          >
-            <TouchableOpacity style={{ marginRight: 25 }}>
-              <FontAwesome name="video-camera" size={24} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Ionicons name="call" size={24} color="white" />
+          <View>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign name='arrowleft' size={24} color="black" />
             </TouchableOpacity>
           </View>
         )
-      })
-  },[navigation, messages])
+  })
+},[navigation])
 // ^^^ Only runs when navigation or messages change 
 
   return (
@@ -179,7 +171,7 @@ const ChatScreen = ({ navigation, route }) => {
                 onSubmitEditing={ sendMsg }
               />
               <TouchableOpacity onPress={ sendMsg } activeOpacity={0.5}>
-                <Ionicons name="send" size="24" color="#2b68e6" />
+                <Ionicons name="send" size={24} color="#2b68e6" />
               </TouchableOpacity>
             </View>
           </>
