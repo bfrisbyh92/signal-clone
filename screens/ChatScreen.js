@@ -53,7 +53,8 @@ const defaultPhoto = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1ht
       onSnapshot(
         query(
           collection(db, `chats/${route.params.id}`, 'messages'),
-          orderBy('timestamp', 'desc')
+          orderBy('timestamp')
+          // ^^^ need to come back to here. Messages are being displayed in the wrong order. ^^^
         ),
         (snapshot) => {
           setMessages(
